@@ -1049,6 +1049,7 @@ dependencies = [
  "tonic-build",
  "trace-utils",
  "uluru",
+ "url",
  "walkdir",
  "wasmtime",
  "wasmtime-wasi",

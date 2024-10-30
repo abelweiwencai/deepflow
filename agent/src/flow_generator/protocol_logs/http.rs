@@ -795,6 +795,9 @@ impl L7ProtocolParserInterface for HttpLog {
             }
         }
         self.last_is_on_blacklist = info.is_on_blacklist;
+        info.trace_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".to_string();
+        info.x_request_id_0 = "z2c5p5ztbsy556dpto8uuaayyyyyyyyy".to_string();
+        info.x_request_id_1 = "z2c5p5ztbsy556dpto8uuaa111111111".to_string();
         if param.parse_log {
             Ok(L7ParseResult::Single(L7ProtocolInfo::HttpInfo(info)))
         } else {
@@ -1041,7 +1044,11 @@ impl HttpLog {
             let url = base.join(url_str).expect("Failed to join URL");
 
             // 获取 distinctRequestId 参数
-            if let Some(distinct_request_id) = url.query_pairs().find(|(key, _)| key == "distinctRequestId").map(|(_, value)| value) {
+            if let Some(distinct_request_id) = url
+                .query_pairs()
+                .find(|(key, _)| key == "distinctRequestId")
+                .map(|(_, value)| value)
+            {
                 println!("distinctRequestId: {}", distinct_request_id);
                 info.trace_id = distinct_request_id.to_string();
             }

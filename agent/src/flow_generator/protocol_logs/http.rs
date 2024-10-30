@@ -22,6 +22,7 @@ use hpack::Decoder;
 use nom::{AsBytes, ParseTo};
 use public::l7_protocol::L7ProtocolChecker;
 use serde::Serialize;
+use url::Url;
 
 use super::pb_adapter::{
     ExtendedInfo, KeyVal, L7ProtocolSendLog, L7Request, L7Response, TraceInfo,

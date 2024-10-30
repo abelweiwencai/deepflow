@@ -11,6 +11,7 @@ members = ["crates/*", "plugins/packet_segmentation_reassembly"]
 exclude = ["src/ebpf/samples/rust/profiler", "src/ebpf/samples/rust/socket-tracer"]
 
 [dependencies]
+url="2.2.2"
 ahash = "0.8"
 anyhow = "1.0"
 arc-swap = "1.5.0"

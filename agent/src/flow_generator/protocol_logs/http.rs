@@ -795,9 +795,6 @@ impl L7ProtocolParserInterface for HttpLog {
             }
         }
         self.last_is_on_blacklist = info.is_on_blacklist;
-        info.trace_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx".to_string();
-        info.x_request_id_0 = "z2c5p5ztbsy556dpto8uuaayyyyyyyyy".to_string();
-        info.x_request_id_1 = "z2c5p5ztbsy556dpto8uuaa111111111".to_string();
         if param.parse_log {
             Ok(L7ParseResult::Single(L7ProtocolInfo::HttpInfo(info)))
         } else {
@@ -1049,10 +1046,14 @@ impl HttpLog {
                 .find(|(key, _)| key == "distinctRequestId")
                 .map(|(_, value)| value)
             {
-                println!("distinctRequestId: {}", distinct_request_id);
                 info.trace_id = distinct_request_id.to_string();
+            } else {
+                info.trace_id = "noDistinctRequestId".to_string();
             }
             // <<<<<<<<<<<<<<< edit by weiwencai
+        }
+        if info.trace_id.is_empty() {
+            info.trace_id = "noTraceId".to_string();
         }
 
         let mut content_length: Option<u32> = None;

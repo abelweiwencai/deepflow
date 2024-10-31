@@ -22,6 +22,7 @@ use hpack::Decoder;
 use nom::{AsBytes, ParseTo};
 use public::l7_protocol::L7ProtocolChecker;
 use serde::Serialize;
+use url::Url;
 
 use super::pb_adapter::{
     ExtendedInfo, KeyVal, L7ProtocolSendLog, L7Request, L7Response, TraceInfo,
@@ -1032,6 +1033,22 @@ impl HttpLog {
             info.version = get_http_request_version(version)?;
 
             info.msg_type = LogMessageType::Request;
+            // >>>>>>>>>>>>>>> edit by weiwencai
+            // 从请求路径中提取 distinctRequestId 参数
+            let url_str = &info.path;
+            // 将相对路径 URL 转换为完整 URL，方便解析
+            let base = Url::parse("https://example.com").expect("Failed to parse base URL");
+            let url = base.join(url_str).expect("Failed to join URL");
+
+            // 获取 distinctRequestId 参数
+            if let Some(distinct_request_id) = url
+                .query_pairs()
+                .find(|(key, _)| key == "distinctRequestId")
+                .map(|(_, value)| value)
+            {
+                info.trace_id = distinct_request_id.to_string();
+            }
+            // <<<<<<<<<<<<<<< edit by weiwencai
         }
 
         let mut content_length: Option<u32> = None;

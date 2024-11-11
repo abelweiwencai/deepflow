@@ -995,6 +995,7 @@ dependencies = [
  "tonic",
  "tonic-build",
  "uluru",
+ "url",
  "wasmtime",
  "wasmtime-wasi",
  "winapi",

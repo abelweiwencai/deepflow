@@ -45,6 +45,7 @@ use crate::{
 };
 use cloud_platform::tingyun;
 use public::utils::net::h2pack;
+use url::Url;
 
 #[derive(Serialize, Debug, Default, Clone)]
 pub struct HttpInfo {
@@ -703,6 +704,34 @@ impl HttpLog {
             info.version = get_http_request_version(version)?.to_owned();
 
             info.msg_type = LogMessageType::Request;
+
+            // >>>>>>>>>>>>>>> edit by weiwencai
+            // 从请求路径中提取 distinctRequestId 参数
+            let url_str = &info.path;
+            // 将相对路径 URL 转换为完整 URL，方便解析
+            let base = Url::parse("https://example.com").expect("Failed to parse base URL");
+            let url = base.join(url_str).expect("Failed to join URL");
+
+            // 获取 distinctRequestId 参数
+            if let Some(distinct_request_id) = url
+                .query_pairs()
+                .find(|(key, _)| key == "distinctRequestId")
+                .map(|(_, value)| value)
+            {
+                info.trace_id = distinct_request_id.to_string();
+            }
+            // 获取spanID
+            if let Some(span_id) = url
+                .query_pairs()
+                .find(|(key, _)| key == "serial_sequence")
+                .map(|(_, value)| value)
+            {
+                info.span_id = span_id.to_string();
+            } else {
+                info.span_id = "0.0".to_string();
+            }
+            // <<<<<<<<<<<<<<< edit by weiwencai
+            
             self.perf_stats.as_mut().map(|p| p.inc_req());
         }
 

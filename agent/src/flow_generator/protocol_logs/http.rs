@@ -1032,15 +1032,15 @@ impl HttpLog {
                 info.trace_id = distinct_request_id.to_string();
             }
             // 获取spanID
-            if let Some(span_id) = url
-                .query_pairs()
-                .find(|(key, _)| key == "serial_sequence")
-                .map(|(_, value)| value)
-            {
-                info.span_id = span_id.to_string();
-            } else {
-                info.span_id = "0.0".to_string();
-            }
+            // if let Some(span_id) = url
+            //     .query_pairs()
+            //     .find(|(key, _)| key == "serial_sequence")
+            //     .map(|(_, value)| value)
+            // {
+            //     info.span_id = span_id.to_string();
+            // } else {
+            //     info.span_id = "0.0".to_string();
+            // }
             // <<<<<<<<<<<<<<< edit by weiwencai
         }
 
